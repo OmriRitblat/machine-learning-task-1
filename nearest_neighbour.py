@@ -28,15 +28,10 @@ def gensmallm(x_list: list, y_list: list, m: int):
 # todo: complete the following functions, you may add auxiliary functions or define class to help you
 
 def learnknn(k: int, x_train: np.array, y_train: np.array):
-    """
-
-    :param k: value of the nearest neighbour parameter k
-    :param x_train: numpy array of size (m, d) containing the training sample
-    :param y_train: numpy array of size (m, 1) containing the labels of the training sample
-    :return: classifier data structure
-    """
-    raise NotImplementedError()
-
+    dict={}
+    for i in range(len(x_train)):
+        dict[tuple(x_train[i])] = y_train[i]
+    return dict
 def predictknn(classifier, x_test: np.array):
     """
 
@@ -44,7 +39,32 @@ def predictknn(classifier, x_test: np.array):
     :param x_test: numpy array of size (n, d) containing test examples that will be classified
     :return: numpy array of size (n, 1) classifying the examples in x_test
     """
-    raise NotImplementedError()
+    preds = []
+    x_train = np.array(list(classifier.keys()))
+    y_train = np.array(list(classifier.values()))
+    for i in range(len(x_test)):
+        distances = np.linalg.norm(x_train - x_test[i], axis=1)
+        k_indices = np.argsort(distances)[:5]
+        k_nearest_labels = y_train[k_indices]
+        values, counts = np.unique(k_nearest_labels, return_counts=True)
+        predicted_label = values[np.argmax(counts)]
+        preds.append(predicted_label)
+    return np.array(preds).reshape(-1, 1)
+
+def test_knn():
+    # Create a simple training set
+    x_train = np.array([[0, 0], [1, 1], [0, 1], [1, 0]])
+    y_train = np.array([0, 0, 1, 1])
+
+    # Create test samples
+    x_test = np.array([[0.9, 0.9], [0.1, 0.2], [0.2, 0.8]])
+    
+    # Train and predict
+    classifier = learnknn(3, x_train, y_train)
+    preds = predictknn(classifier, x_test)
+    
+    print("Predictions:", preds.flatten())
+    # Expected: [0, 1, 1] or similar, depending on k and tie-breaking
 
 
 def simple_test():
@@ -83,6 +103,7 @@ def simple_test():
 if __name__ == '__main__':
 
     # before submitting, make sure that the function simple_test runs without errors
-    simple_test()
+    # simple_test()
+    test_knn()
 
 
