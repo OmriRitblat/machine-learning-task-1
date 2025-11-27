@@ -70,19 +70,19 @@ def test_knn():
 def simple_test():
     data = np.load('mnist_all.npz')
 
-    train0 = data['train0']
-    train1 = data['train1']
-    train2 = data['train2']
-    train3 = data['train3']
+    train0 = data['train1']
+    train1 = data['train3']
+    train2 = data['train4']
+    train3 = data['train6']
 
-    test0 = data['test0']
-    test1 = data['test1']
-    test2 = data['test2']
-    test3 = data['test3']
+    test0 = data['test1']
+    test1 = data['test3']
+    test2 = data['test4']
+    test3 = data['test6']
 
-    x_train, y_train = gensmallm([train0, train1, train2, train3], [0, 1, 2, 3], 100)
+    x_train, y_train = gensmallm([train0, train1, train2, train3], [1, 3, 4, 6], 100)
 
-    x_test, y_test = gensmallm([test0, test1, test2, test3], [0, 1, 2, 3], 50)
+    x_test, y_test = gensmallm([test0, test1, test2, test3], [1, 3, 4, 6], 50)
 
     classifer = learnknn(5, x_train, y_train)
 
@@ -105,19 +105,19 @@ def knn_experiment(sample_sizes, repeats=10):
     max_errors = []
 
     data = np.load('mnist_all.npz')
-    train0 = data['train0']
-    train1 = data['train1']
-    train2 = data['train2']
-    train3 = data['train3']
+    train0 = data['train1']
+    train1 = data['train3']
+    train2 = data['train4']
+    train3 = data['train6']
 
-    test0 = data['test0']
-    test1 = data['test1']
-    test2 = data['test2']
-    test3 = data['test3']
+    test0 = data['test1']
+    test1 = data['test3']
+    test2 = data['test4']
+    test3 = data['test6']
 
-    x_train_full, y_train_full = gensmallm([train0, train1, train2, train3], [0, 1, 2, 3], 100)
+    x_train, y_train = gensmallm([train0, train1, train2, train3], [1, 3, 4, 6], 100)
 
-    x_test, y_test = gensmallm([test0, test1, test2, test3], [0, 1, 2, 3], 50)
+    x_test, y_test = gensmallm([test0, test1, test2, test3], [1, 3, 4, 6], 50)
     for m in sample_sizes:
         errors = []
         for _ in range(repeats):
@@ -139,22 +139,22 @@ def knn_experiment(sample_sizes, repeats=10):
 
 def knn_experiment_30_runs(sample_sizes, repeats=30):
     data = np.load('mnist_all.npz')
-    train0 = data['train0']
-    train1 = data['train1']
-    train2 = data['train2']
-    train3 = data['train3']
-    test0 = data['test0']
-    test1 = data['test1']
-    test2 = data['test2']
-    test3 = data['test3']
-    x_test, y_test = gensmallm([test0, test1, test2, test3], [0, 1, 2, 3], 200)
+    train0 = data['train1']
+    train1 = data['train3']
+    train2 = data['train4']
+    train3 = data['train6']
+    test0 = data['test1']
+    test1 = data['test3']
+    test2 = data['test4']
+    test3 = data['test6']
+    x_test, y_test = gensmallm([test0, test1, test2, test3], [1, 3, 4, 6], 200)
 
     for m in sample_sizes:
         avg_errors = []
         for k in range(1, 16):
             errors = []
             for _ in range(repeats):
-                x_train, y_train = gensmallm([train0, train1, train2, train3], [0, 1, 2, 3], m)
+                x_train, y_train = gensmallm([train0, train1, train2, train3], [1, 3, 4, 6], m)
                 classifier = learnknn(k, x_train, y_train)
                 y_pred = predictknn(classifier, x_test).flatten()
                 error = np.mean(y_test != y_pred)
@@ -174,15 +174,15 @@ def knn_experiment_30_runs(sample_sizes, repeats=30):
 
 def knn_experiment_30_runs_corrupted_labels(sample_sizes, repeats=30):
     data = np.load('mnist_all.npz')
-    train0 = data['train0']
-    train1 = data['train1']
-    train2 = data['train2']
-    train3 = data['train3']
-    test0 = data['test0']
-    test1 = data['test1']
-    test2 = data['test2']
-    test3 = data['test3']
-    x_test_orig, y_test_orig = gensmallm([test0, test1, test2, test3], [0, 1, 2, 3], 200)
+    train0 = data['train1']
+    train1 = data['train3']
+    train2 = data['train4']
+    train3 = data['train6']
+    test0 = data['test1']
+    test1 = data['test3']
+    test2 = data['test4']
+    test3 = data['test6']
+    x_test_orig, y_test_orig = gensmallm([test0, test1, test2, test3], [1, 3, 4, 6], 200)
 
     def corrupt_labels(y, num_classes=4, corruption_ratio=0.3):
         y_corrupt = y.copy()
@@ -200,7 +200,7 @@ def knn_experiment_30_runs_corrupted_labels(sample_sizes, repeats=30):
         for k in range(1, 16):
             errors = []
             for _ in range(repeats):
-                x_train, y_train = gensmallm([train0, train1, train2, train3], [0, 1, 2, 3], m)
+                x_train, y_train = gensmallm([train0, train1, train2, train3], [1, 3, 4, 6], m)
                 y_train_corrupt = corrupt_labels(y_train)
                 y_test_corrupt = corrupt_labels(y_test_orig)
                 classifier = learnknn(k, x_train, y_train_corrupt)
